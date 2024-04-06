@@ -1,0 +1,18 @@
+[package]
+name = "maschine"
+version = "0.0.1"
+authors = ["William Light <wrl@illest.net>"]
+
+[profile.release]
+lto = true
+
+[dependencies]
+nix = "~0.7"
+hsl = "~0.1"
+midi = "*"
+tinyosc = "0.0.3"
+png = "0.17.13"
+hex = "0.4.3"
+
+[dependencies.alsa-seq]
+path = "alsa-seq"
