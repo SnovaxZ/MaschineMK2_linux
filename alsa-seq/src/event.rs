@@ -50,6 +50,8 @@ pub trait TransliteratedFromCMacros {
     fn set_button(&mut self, _type: c_uint);
 
     fn set_cc(&mut self, _type: c_uint, channel: Channel, controller_number: u16, position: u8);
+    fn set_cc14(&mut self, _type: c_uint, channel: Channel, controller_number: u16, position: u16);
+
 }
 
 impl TransliteratedFromCMacros for snd_seq_event_t {
@@ -106,6 +108,17 @@ impl TransliteratedFromCMacros for snd_seq_event_t {
             (*ctrl).value = position as c_int;
         }
     }
+    fn set_cc14(&mut self, _type: c_uint, channel: Channel, controller_number: u16, position: u16) {
+        self._type = _type as snd_seq_event_type_t;
+        //self.set_fixed()
+        let ctrl = self.data.control();
+        unsafe {
+            (*ctrl).channel = (channel as c_uchar) + 1;
+            (*ctrl).param = controller_number as c_uint;
+            (*ctrl).value = position as c_int;
+        }
+    }
+
 }
 pub trait ToSndSeqEvent {
     fn to_snd_seq_event(&self) -> Option<snd_seq_event_t>;
@@ -160,6 +173,8 @@ impl ToSndSeqEvent for Message {
             Message::RPN7(channel, control_number, pos) =>
                 ev.set_cc(SND_SEQ_EVENT_CONTROLLER, channel, control_number, pos),
 
+            Message::RPN14(channel, control_number, pos) =>
+                ev.set_cc14(SND_SEQ_EVENT_CONTROLLER, channel, control_number, pos),
 
             _ => return None
         }
