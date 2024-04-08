@@ -1068,6 +1068,7 @@ fn main() {
     } else {
         println!("RUNNING!")
     }
+    //println!("{}", std::env::current_dir().unwrap().display());
     for i in 0..16 {
         dev.set_pad_light(i, handler.pad_color(), PAD_RELEASED_BRIGHTNESS);
     }
