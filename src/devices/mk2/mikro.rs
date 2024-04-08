@@ -258,6 +258,7 @@ const BUTTON_REPORT_TO_MIKROBUTTONS_MAP: [[Option<MaschineButton>; 8]; 23] = [
         Some(MaschineButton::P7),
         Some(MaschineButton::P8),
     ],
+
 ];
 
 #[allow(dead_code)]
@@ -276,6 +277,7 @@ pub struct Mikro {
     buttons: [u8; 24],
 
     midi_note_base: u8,
+    roller_state: [usize; 9],
 }
 
 impl Mikro {
@@ -309,10 +311,11 @@ impl Mikro {
 
             pads: Mikro::sixteen_maschine_pads(),
             buttons: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
             ],
 
             midi_note_base: 48,
+            roller_state: [0usize; 9],
         };
 
         _self.light_buf[0] = 0x80;
@@ -332,10 +335,13 @@ impl Mikro {
                     .expect("unknown button received from device");
 
                 if (byte & (1 << (off - 1))) != 0 {
-                    //println!("{}", byte);
-                    handler.button_down(self, btn, byte);
+                    //println!(" {} ", byte);
+                    let is_down = true;
+                    handler.button_down(self, btn, byte, is_down);
                 } else {
-                    handler.button_up(self, btn, byte);
+                    let is_down = false;
+                    //print!(" {} ", byte);
+                    handler.button_up(self, btn, byte, is_down);
                 }
                 diff >>= off;
             }
@@ -410,6 +416,16 @@ impl Maschine for Mikro {
 
     fn get_midi_note_base(&self) -> u8 {
         return self.midi_note_base;
+    }
+
+    fn set_roller_state(&mut self, state: usize, idx: usize) {
+        self.roller_state[idx] = state;
+    }
+
+    fn get_roller_state(&self, idx: usize) -> usize {
+        //println!("{}", self.roller_state[idx]);
+
+        return self.roller_state[idx];
     }
 
     fn set_button_light(&mut self, btn: MaschineButton, _color: u32, brightness: f32) {
@@ -652,6 +668,6 @@ impl Maschine for Mikro {
             unistd::write(self.dev, &screen_buf).unwrap();
             screen_writer += 1;
         }
-        println!("writescreen");
+        println!("RUNNING!");
     }
 }

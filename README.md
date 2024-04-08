@@ -1,10 +1,10 @@
 # MaschineMK2_linux
-
 **MaschineMK2_linux is an open-source program that allows you to (possibly) use your Maschine MK2 device on linux**
 This is absolutely and completely untested and I have never written rust before this project.
 
 Forked from https://github.com/wrl/maschine.rs
 Without the maschine.rs project I would not have a working MIDI controller right now!
+
 
 # Features
 - Functional midi pads
@@ -38,7 +38,7 @@ the *build.sh* just runs cargo build and moves the test picture into the release
  
 
 # Use
-First: figure out which hidraw path your maschine uses.
+First: figure out which hidraw path your maschine uses. (*The run.sh does this for you now!*)
 
 Second (optional): change the udev rules so you can run without sudo.
 
@@ -58,3 +58,8 @@ Fourth (optional): I have included a shellscript to turn on all the lights at on
 It's a bit inconvenient but:
  - With the program open in a terminal, open a new terminal `cd MaschineMK2_linux` and `./insert_colors.sh`
 
+*Info*
+
+- Group buttons change the midi note base.
+- Most other buttons can be mapped in Reaper (I don't know about other DAW's).
+- Encoders 2-9 run wrap after a quarter rotation (Please fix).

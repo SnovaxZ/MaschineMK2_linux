@@ -13,4 +13,10 @@ echo Which hidraw NUMBER is your Maschine MK2?
 read hidraw
 echo starting MK2
 
-./target/release/maschine /dev/hidraw$hidraw
+echo Do you want to write on the screen? Y/N
+read confirm
+
+if [ "$confirm" = "n" ] || [ "$confirm" = "N" ]
+then ./target/release/maschine /dev/hidraw$hidraw any
+else ./target/release/maschine /dev/hidraw$hidraw
+fi

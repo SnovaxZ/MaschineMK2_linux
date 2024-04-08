@@ -510,507 +510,434 @@ impl<'a> MHandler<'a> {
         maschine: &mut dyn Maschine,
         btn: MaschineButton,
         status: usize,
+        is_down: bool,
     ) {
         let button = btn_to_osc_button_map(btn);
         let controlbase = 15;
-        match button {
-            "play" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 1, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "stop" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 2, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "rec" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 3, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "grid" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 4, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "step_left" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 5, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "step_right" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 6, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "restart" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 7, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "browse" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 8, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "sampling" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 9, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "note_repeat" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 10, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "control" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 11, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "nav" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 12, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "nav_left" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 13, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "nav_right" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 14, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "main" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 24, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "scene" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 25, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "pattern" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 26, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "pad_mode" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 27, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "view" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 28, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "duplicate" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 29, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "select" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 30, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "solo" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 31, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "step" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 32, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "mute" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 33, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "navigate" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 34, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "tempo" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 35, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "enter" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 36, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "auto" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 37, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "all" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 38, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f1" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 39, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f2" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 40, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f3" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 41, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f4" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 42, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f5" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 43, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f6" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 44, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f7" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 45, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "f8" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 46, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "page_right" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 47, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-            "page_left" => {
-                if status > 0 {
-                    let msg = Message::RPN7(Ch1, 48, status as u8);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
-                }
-            }
-
-            "A8" => {
-                let msg = Message::RPN7(Ch1, controlbase, status as u8 * 8);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-
-            "B5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "B6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "B7" => {
-                let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "B8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "C8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-
-            "D5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 2, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "D6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 2, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "D7" => {
-                let msg = Message::RPN14(Ch1, controlbase + 2, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "D8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 2, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "E8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 2, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-
-            "FF5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 3, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "FF6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 3, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "FF7" => {
-                let msg = Message::RPN14(Ch1, controlbase + 3, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "FF8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 3, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "G8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 3, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-
-            "H5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 4, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "H6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 4, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "H7" => {
-                let msg = Message::RPN14(Ch1, controlbase + 4, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "H8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 4, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "I8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 4, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-
-            "J5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 5, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "J6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 5, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "J7" => {
-                let msg = Message::RPN14(Ch1, controlbase + 5, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "J8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 5, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "K8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 5, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "L5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 6, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "L6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 6, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "L7" => {
-                let msg = Message::RPN14(Ch1, controlbase + 6, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "L8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 6, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "M8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 6, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "N5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 7, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "N6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 7, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "N7" => {
-                let msg = Message::RPN14(Ch1, controlbase + 7, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "N8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 7, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "O8" => {
-                let msg = Message::RPN14(Ch1, controlbase + 7, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "P5" => {
-                let msg = Message::RPN14(Ch1, controlbase + 8, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "P6" => {
-                let msg = Message::RPN14(Ch1, controlbase + 8, status as u16 / 2);
-                self.seq_port.send_message(&msg).unwrap();
-                self.seq_handle.drain_output();
-            }
-            "group_a" => {
-                maschine.set_midi_note_base(24);
-            }
-            "group_b" => {
-                maschine.set_midi_note_base(36);
-            }
-            "group_c" => {
-                maschine.set_midi_note_base(48);
-            }
-            "group_d" => {
-                maschine.set_midi_note_base(60);
-            }
-            "group_e" => {
-                maschine.set_midi_note_base(72);
-            }
-            "group_f" => {
-                maschine.set_midi_note_base(84);
-            }
-            "group_g" => {
-                maschine.set_midi_note_base(96);
-            }
-            "group_h" => {
-                maschine.set_midi_note_base(108);
-            }
-
-            _ => {}
+        if button.contains("C") {
+            let idx = 1;
+            if button == "C8" {
+                maschine.set_roller_state(status, idx);
+                //println!("3={}", status);
+            };
+            if button == "C7" {
+                maschine.set_roller_state(status, idx);
+                //println!("2={}", status);
+            };
+        };
+        if button.contains("E") {
+            let idx = 2;
+            if button == "E8" {
+                maschine.set_roller_state(status, idx);
+                //println!("3={}", status);
+            };
+        };
+        if button.contains("G") {
+            let idx = 3;
+            if button == "G8" {
+                maschine.set_roller_state(status, idx);
+                //println!("3={}", status);
+            };
+        };
+        if button.contains("I") {
+            let idx = 4;
+            if button == "I8" {
+                maschine.set_roller_state(status, idx);
+                //println!("3={}", status);
+            };
+        };
+        if button.contains("K") {
+            let idx = 5;
+            if button == "K8" {
+                maschine.set_roller_state(status, idx);
+                //println!("3={}", status);
+            };
+        };
+        if button.contains("M") {
+            let idx = 6;
+            if button == "M8" {
+                maschine.set_roller_state(status, idx);
+                //println!("3={}", status);
+            };
+        };
+        if button.contains("O") {
+            let idx = 7;
+            if button == "O8" {
+                maschine.set_roller_state(status, idx);
+                //println!("3={}", status);
+            };
+        };
+        if button.contains("A8") {
+            let msg = Message::RPN7(Ch1, controlbase, status as u8 * 8);
+            self.seq_port.send_message(&msg).unwrap();
+            self.seq_handle.drain_output();
         }
 
+        if is_down == true && status <= 250 {
+            match button {
+                "play" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 1, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "stop" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 2, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "rec" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 3, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "grid" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 4, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "step_left" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 5, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "step_right" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 6, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "restart" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 7, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "browse" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 8, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "sampling" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 9, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "note_repeat" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 10, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "control" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 11, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "nav" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 12, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "nav_left" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 13, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "nav_right" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 14, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "main" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 24, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "scene" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 25, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "pattern" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 26, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "pad_mode" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 27, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "view" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 28, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "duplicate" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 29, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "select" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 30, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "solo" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 31, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "step" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 32, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "mute" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 33, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "navigate" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 34, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "tempo" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 35, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "enter" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 36, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "auto" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 37, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "all" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 38, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f1" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 39, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f2" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 40, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f3" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 41, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f4" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 42, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f5" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 43, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f6" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 44, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f7" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 45, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "f8" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 46, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "page_right" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 47, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+                "page_left" => {
+                    if status > 0 {
+                        let msg = Message::RPN7(Ch1, 48, status as u8);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    }
+                }
+
+                "B6" => {
+                    let idx = 1;
+                    let state = maschine.get_roller_state(idx);
+                    let status = status / 4 + state * 64;
+                    let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+                "D6" => {
+                    let idx = 2;
+                    let state = maschine.get_roller_state(idx);
+                    let status = status / 4 + state * 64;
+                    let msg = Message::RPN14(Ch1, controlbase + 2, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+                "FF6" => {
+                    let idx = 3;
+                    let state = maschine.get_roller_state(idx);
+                    let status = status / 4 + state * 64;
+                    let msg = Message::RPN14(Ch1, controlbase + 3, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+                "H6" => {
+                    let idx = 4;
+                    let state = maschine.get_roller_state(idx);
+                    let status = status / 4 + state * 64;
+                    let msg = Message::RPN14(Ch1, controlbase + 4, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+                "J6" => {
+                    let idx = 5;
+                    let state = maschine.get_roller_state(idx);
+                    let status = status / 4 + state * 64;
+                    let msg = Message::RPN14(Ch1, controlbase + 5, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+                "L6" => {
+                    let idx = 6;
+                    let state = maschine.get_roller_state(idx);
+                    let status = status / 4 + state * 64;
+                    let msg = Message::RPN14(Ch1, controlbase + 6, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+                "N6" => {
+                    let idx = 7;
+                    let state = maschine.get_roller_state(idx);
+                    let status = status / 4 + state * 64;
+                    let msg = Message::RPN14(Ch1, controlbase + 7, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+                "P6" => {
+                    let msg = Message::RPN14(Ch1, controlbase + 8, status as u16 / 2);
+                    self.seq_port.send_message(&msg).unwrap();
+                    self.seq_handle.drain_output();
+                }
+
+                "group_a" => {
+                    maschine.set_midi_note_base(24);
+                }
+                "group_b" => {
+                    maschine.set_midi_note_base(36);
+                }
+                "group_c" => {
+                    maschine.set_midi_note_base(48);
+                }
+                "group_d" => {
+                    maschine.set_midi_note_base(60);
+                }
+                "group_e" => {
+                    maschine.set_midi_note_base(72);
+                }
+                "group_f" => {
+                    maschine.set_midi_note_base(84);
+                }
+                "group_g" => {
+                    maschine.set_midi_note_base(96);
+                }
+                "group_h" => {
+                    maschine.set_midi_note_base(108);
+                }
+                _ => {}
+            }
+        }
         self.send_osc_msg(&*format!("/{}", button), osc_args![status as f32]);
     }
 
@@ -1064,13 +991,25 @@ impl<'a> MaschineHandler for MHandler<'a> {
         self.send_osc_encoder_msg(delta);
     }
 
-    fn button_down(&mut self, maschine: &mut dyn Maschine, btn: MaschineButton, byte: u8) {
-        println!("{}", byte as usize);
-        self.send_osc_button_msg(maschine, btn, byte as usize);
+    fn button_down(
+        &mut self,
+        maschine: &mut dyn Maschine,
+        btn: MaschineButton,
+        byte: u8,
+        is_down: bool,
+    ) {
+        //println!("{}", byte as usize);
+        self.send_osc_button_msg(maschine, btn, byte as usize, is_down);
     }
 
-    fn button_up(&mut self, maschine: &mut dyn Maschine, btn: MaschineButton, byte: u8) {
-        self.send_osc_button_msg(maschine, btn, byte as usize);
+    fn button_up(
+        &mut self,
+        maschine: &mut dyn Maschine,
+        btn: MaschineButton,
+        byte: u8,
+        is_down: bool,
+    ) {
+        self.send_osc_button_msg(maschine, btn, byte as usize, is_down);
     }
 }
 
@@ -1126,6 +1065,8 @@ fn main() {
     //Trying to draw stuff here
     if args.len() < 3 {
         dev.write_screen();
+    } else {
+        println!("RUNNING!")
     }
     for i in 0..16 {
         dev.set_pad_light(i, handler.pad_color(), PAD_RELEASED_BRIGHTNESS);

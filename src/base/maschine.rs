@@ -17,7 +17,7 @@
 
 use std::os::unix::io::RawFd;
 
-#[derive(Copy,Clone,Debug)]
+#[derive(Copy, Clone, Debug)]
 pub enum MaschineButton {
     F8,
     F7,
@@ -229,11 +229,9 @@ pub enum MaschineButton {
     P6,
     P7,
     P8,
+
+
 }
-
-
-
-
 pub trait Maschine {
     fn get_fd(&self) -> RawFd;
 
@@ -241,6 +239,9 @@ pub trait Maschine {
 
     fn get_midi_note_base(&self) -> u8;
     fn set_midi_note_base(&mut self, base: u8);
+
+    fn set_roller_state(&mut self, state: usize, idx: usize);
+    fn get_roller_state(&self, idx: usize) -> usize;
 
     fn set_pad_light(&mut self, pad_idx: usize, color: u32, brightness: f32);
     fn set_button_light(&mut self, btn: MaschineButton, color: u32, brightness: f32);
@@ -260,8 +261,8 @@ pub trait MaschineHandler {
 
     fn encoder_step(&mut self, _: &mut dyn Maschine, encoder_idx: usize, delta: i32) {}
 
-    fn button_down(&mut self, _: &mut dyn Maschine, button: MaschineButton, byte: u8) {}
-    fn button_up(&mut self, _: &mut dyn Maschine, button: MaschineButton, byte: u8) {}
+    fn button_down(&mut self, _: &mut dyn Maschine, button: MaschineButton, byte: u8, is_down: bool) {}
+    fn button_up(&mut self, _: &mut dyn Maschine, button: MaschineButton, byte: u8, is_down: bool) {}
 
     fn read_input(&mut self, _: &mut dyn Maschine) {}
 }
