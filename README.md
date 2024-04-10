@@ -62,4 +62,4 @@ It's a bit inconvenient but:
 
 - Group buttons change the midi note base.
 - Most other buttons can be mapped in Reaper (I don't know about other DAW's).
-- Encoders 2-9 run wrap after a quarter rotation (Please fix).
+- Encoders are currently absolute 360 degrees, but they stop at 98% (-ish).
