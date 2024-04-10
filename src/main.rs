@@ -16,6 +16,7 @@
 //  <http://www.gnu.org/licenses/>.
 
 use std::env;
+use std::thread;
 use std::os::unix::io::AsRawFd;
 use std::path::Path;
 
@@ -621,9 +622,10 @@ impl<'a> MHandler<'a> {
                                     check = 0;
                                     now = SystemTime::now();
                                 };
-                            }
+                                thread::sleep(timer_interval);
+                            };
                             step = 0;
-                        }
+                        };
                     };
                 }
 
