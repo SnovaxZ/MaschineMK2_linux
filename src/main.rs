@@ -43,7 +43,7 @@ use tinyosc as osc;
 mod base;
 mod devices;
 
-use base::{Maschine, MaschineButton, MaschineHandler};
+use base::{maschine, Maschine, MaschineButton, MaschineHandler};
 
 fn ev_loop(dev: &mut dyn Maschine, mhandler: &mut MHandler) {
     let mut fds = [
@@ -514,6 +514,14 @@ impl<'a> MHandler<'a> {
     ) {
         let button = btn_to_osc_button_map(btn);
         let controlbase = 15;
+        let modpress = maschine.get_mod();
+        if button.contains("shift") {
+            if status > 0 {
+                maschine.set_mod(1);
+            } else {
+                maschine.set_mod(0);
+            }
+        }
         if button.contains("C") {
             let idx = 1;
             if button == "C8" {
@@ -695,10 +703,14 @@ impl<'a> MHandler<'a> {
                     }
                 }
                 "pad_mode" => {
+                    if modpress == 1 {
+                        maschine.set_padmode(1);
+                    } else {
                     if status > 0 {
                         let msg = Message::RPN7(Ch1, 27, status as u8);
                         self.seq_port.send_message(&msg).unwrap();
                         self.seq_handle.drain_output();
+                    }
                     }
                 }
                 "view" => {

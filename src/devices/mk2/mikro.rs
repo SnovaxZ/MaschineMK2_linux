@@ -278,6 +278,8 @@ pub struct Mikro {
 
     midi_note_base: u8,
     roller_state: [usize; 9],
+    mod_state: usize,
+    padmode: usize,
 }
 
 impl Mikro {
@@ -316,6 +318,8 @@ impl Mikro {
 
             midi_note_base: 48,
             roller_state: [0usize; 9],
+            mod_state: 0,
+            padmode: 0,
         };
 
         _self.light_buf[0] = 0x80;
@@ -428,6 +432,29 @@ impl Maschine for Mikro {
         return self.roller_state[idx];
     }
 
+    fn set_mod(&mut self, state: usize) {
+        self.mod_state = state;
+        println!("shift");
+    }
+
+    fn get_mod(&self) -> usize {
+        println!("unshift");
+        return self.mod_state;
+    }
+
+    fn set_padmode(&mut self, state: usize) {
+        if self.padmode < 3 && state == 1 {
+            self.padmode += 1
+        } else {
+            self.padmode = 0;
+        };
+        println!("Padmode {}", self.padmode);
+    }
+
+    fn get_padmode(&self) -> usize {
+        return self.padmode;
+    }
+    
     fn set_button_light(&mut self, btn: MaschineButton, _color: u32, brightness: f32) {
         let mut idx = 0;
         let mut idx2 = 0;

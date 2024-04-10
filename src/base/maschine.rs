@@ -246,6 +246,12 @@ pub trait Maschine {
     fn set_pad_light(&mut self, pad_idx: usize, color: u32, brightness: f32);
     fn set_button_light(&mut self, btn: MaschineButton, color: u32, brightness: f32);
 
+    fn set_mod(&mut self, state: usize);
+    fn get_mod(&self) -> usize;
+
+    fn set_padmode(&mut self, state: usize);
+    fn get_padmode(&self) -> usize;
+
     fn readable(&mut self, _: &mut dyn MaschineHandler);
 
     fn clear_screen(&mut self);
