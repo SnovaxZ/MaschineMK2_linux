@@ -584,12 +584,49 @@ impl<'a> MHandler<'a> {
         if is_down == true && status <= 250 {
             match button {
                 "play" => {
-                    if status > 0 {
+                    if status > 0 && maschine.get_padmode() != 2 {
                         let msg = Message::RPN7(Ch1, 1, status as u8);
                         self.seq_port.send_message(&msg).unwrap();
                         self.seq_handle.drain_output();
-                    }
+                    } else if maschine.get_padmode() == 2 {
+                        let mut now = SystemTime::now();
+                        let timer_interval = Duration::from_millis(maschine.get_seq_speed());
+                        let mut step = 0;
+                        let mut check = 0;
+                        for i in 0..4 {
+                            while step < 16 {
+                                if maschine.note_check(step) == 1
+                                    && now.elapsed().unwrap() >= timer_interval
+                                    && check == 0
+                                {
+                                    let msg = maschine.load_notes(step, 1);
+                                    self.seq_port.send_message(&msg).unwrap();
+                                    self.seq_handle.drain_output();
+                                    check = 1;
+                                    println!("this")
+                                };
+                                if now.elapsed().unwrap() >= timer_interval * 2
+                                    && maschine.note_check(step) == 1
+                                {
+                                    let msg = maschine.load_notes(step, 0);
+                                    self.seq_port.send_message(&msg).unwrap();
+                                    self.seq_handle.drain_output();
+                                    now = SystemTime::now();
+                                    step += 1;
+                                    check = 0;
+                                } else if now.elapsed().unwrap() >= timer_interval * 2
+                                    && maschine.note_check(step) == 0
+                                {
+                                    step += 1;
+                                    check = 0;
+                                    now = SystemTime::now();
+                                };
+                            }
+                            step = 0;
+                        }
+                    };
                 }
+
                 "stop" => {
                     if status > 0 {
                         let msg = Message::RPN7(Ch1, 2, status as u8);
@@ -865,9 +902,13 @@ impl<'a> MHandler<'a> {
                     let idx = 1;
                     let state = maschine.get_roller_state(idx);
                     let status = status / 4 + state * 64;
-                    let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
-                    self.seq_port.send_message(&msg).unwrap();
-                    self.seq_handle.drain_output();
+                    if modpress != 1 {
+                        let msg = Message::RPN14(Ch1, controlbase + 1, status as u16 / 2);
+                        self.seq_port.send_message(&msg).unwrap();
+                        self.seq_handle.drain_output();
+                    } else {
+                        maschine.set_seq_speed(status);
+                    }
                 }
                 "D6" => {
                     let idx = 2;

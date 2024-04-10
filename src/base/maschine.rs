@@ -255,7 +255,10 @@ pub trait Maschine {
     fn note_check(&self, pad_idx: usize) -> usize;
     fn note_save(&mut self, pad_idx: usize, note: u8, vel: u8);
 
-    fn load_notes(&self, pad_idx: usize) -> Message;
+    fn load_notes(&self, pad_idx: usize, context: usize) -> Message;
+
+    fn set_seq_speed(&mut self, status: usize);
+    fn get_seq_speed(&self) -> u64;
 
     fn set_padmode(&mut self, state: usize);
     fn get_padmode(&self) -> usize;

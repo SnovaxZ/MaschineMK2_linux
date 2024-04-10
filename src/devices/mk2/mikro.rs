@@ -261,7 +261,6 @@ const BUTTON_REPORT_TO_MIKROBUTTONS_MAP: [[Option<MaschineButton>; 8]; 23] = [
         Some(MaschineButton::P7),
         Some(MaschineButton::P8),
     ],
-
 ];
 
 #[allow(dead_code)]
@@ -284,12 +283,13 @@ pub struct Mikro {
     mod_state: usize,
     padmode: usize,
 
-    note: [u8;16],
+    note: [u8; 16],
     note_state: [usize; 16],
     noteset: bool,
     noteidx: usize,
 
     vel: [U7; 16],
+    speed: u64,
 }
 
 impl Mikro {
@@ -323,7 +323,8 @@ impl Mikro {
 
             pads: Mikro::sixteen_maschine_pads(),
             buttons: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+                0x10, 0x10, 0x10,
             ],
 
             midi_note_base: 48,
@@ -331,14 +332,13 @@ impl Mikro {
             mod_state: 0,
             padmode: 0,
 
-            note: [48u8;16],
+            note: [48u8; 16],
             note_state: [0usize; 16],
             noteset: false,
             noteidx: 0,
 
             vel: [80u8; 16],
-
-
+            speed: 100,
         };
 
         _self.light_buf[0] = 0x80;
@@ -476,7 +476,10 @@ impl Maschine for Mikro {
         if self.noteset == true {
             self.vel[self.noteidx] = vel;
             self.note[self.noteidx] = note;
-            println!("note:{}, velocity{}", self.note[self.noteidx], self.vel[pad_idx]);
+            println!(
+                "step: {}, note:{}, velocity{}",
+                self.noteidx, self.note[self.noteidx], self.vel[self.noteidx]
+            );
             self.noteset = false;
         } else {
             self.noteidx = pad_idx;
@@ -492,11 +495,25 @@ impl Maschine for Mikro {
         return self.note_state[pad_idx];
     }
 
-    fn load_notes(&self, pad_idx: usize) -> midi::Message {
-        let msg = Message::NoteOn(Ch2, self.note[pad_idx], self.vel[pad_idx]);
-        return msg;
+    fn load_notes(&self, pad_idx: usize, context: usize) -> midi::Message {
+        if context == 1 {
+            let msg = Message::NoteOn(Ch2, self.note[pad_idx], self.vel[pad_idx]);
+            println!("{}", self.note[pad_idx]);
+            return msg;
+        } else {
+            let msg = Message::NoteOff(Ch2, self.note[pad_idx], self.vel[pad_idx]);
+            return msg;
+        }
     }
 
+    fn set_seq_speed(&mut self, status: usize) {
+        self.speed = status as u64 * 2;
+        println!("sequencer rate: {}", self.speed);
+    }
+
+    fn get_seq_speed(&self) -> u64 {
+        return self.speed
+    }
 
     fn set_button_light(&mut self, btn: MaschineButton, _color: u32, brightness: f32) {
         let mut idx = 0;
@@ -631,10 +648,7 @@ impl Maschine for Mikro {
     fn write_screen(&mut self) {
         let mut limits = png::Limits::default();
         limits.bytes = 10 * 1024;
-        let decoder = png::Decoder::new_with_limits(
-            File::open("picturetest.png").unwrap(),
-            limits,
-        );
+        let decoder = png::Decoder::new_with_limits(File::open("picturetest.png").unwrap(), limits);
         let mut reader = decoder.read_info().unwrap();
         let mut picture = vec![0; reader.output_buffer_size()];
         let info = reader.next_frame(&mut picture).unwrap();
