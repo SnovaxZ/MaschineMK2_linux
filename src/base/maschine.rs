@@ -17,6 +17,8 @@
 
 use std::os::unix::io::RawFd;
 
+use midi::Message;
+
 #[derive(Copy, Clone, Debug)]
 pub enum MaschineButton {
     F8,
@@ -248,6 +250,12 @@ pub trait Maschine {
 
     fn set_mod(&mut self, state: usize);
     fn get_mod(&self) -> usize;
+
+    fn note_state(&mut self, pad_idx: usize, msg: usize);
+    fn note_check(&self, pad_idx: usize) -> usize;
+    fn note_save(&mut self, pad_idx: usize, note: u8, vel: u8);
+
+    fn load_notes(&self, pad_idx: usize) -> Message;
 
     fn set_padmode(&mut self, state: usize);
     fn get_padmode(&self) -> usize;

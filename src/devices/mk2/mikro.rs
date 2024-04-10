@@ -20,12 +20,15 @@ use std::mem::transmute;
 use std::os::unix::io;
 
 extern crate nix;
+use midi::{Channel::Ch2, Message, U7};
 use nix::unistd;
 
 extern crate hex;
 extern crate png;
 
 use base::{Maschine, MaschineButton, MaschineHandler, MaschinePad, MaschinePadStateTransition};
+
+use crate::base::maschine;
 
 const BUTTON_REPORT_TO_MIKROBUTTONS_MAP: [[Option<MaschineButton>; 8]; 23] = [
     [
@@ -280,6 +283,13 @@ pub struct Mikro {
     roller_state: [usize; 9],
     mod_state: usize,
     padmode: usize,
+
+    note: [u8;16],
+    note_state: [usize; 16],
+    noteset: bool,
+    noteidx: usize,
+
+    vel: [U7; 16],
 }
 
 impl Mikro {
@@ -320,6 +330,15 @@ impl Mikro {
             roller_state: [0usize; 9],
             mod_state: 0,
             padmode: 0,
+
+            note: [48u8;16],
+            note_state: [0usize; 16],
+            noteset: false,
+            noteidx: 0,
+
+            vel: [80u8; 16],
+
+
         };
 
         _self.light_buf[0] = 0x80;
@@ -434,11 +453,9 @@ impl Maschine for Mikro {
 
     fn set_mod(&mut self, state: usize) {
         self.mod_state = state;
-        println!("shift");
     }
 
     fn get_mod(&self) -> usize {
-        println!("unshift");
         return self.mod_state;
     }
 
@@ -454,7 +471,33 @@ impl Maschine for Mikro {
     fn get_padmode(&self) -> usize {
         return self.padmode;
     }
-    
+
+    fn note_save(&mut self, pad_idx: usize, note: u8, vel: u8) {
+        if self.noteset == true {
+            self.vel[self.noteidx] = vel;
+            self.note[self.noteidx] = note;
+            println!("note:{}, velocity{}", self.note[self.noteidx], self.vel[pad_idx]);
+            self.noteset = false;
+        } else {
+            self.noteidx = pad_idx;
+            self.noteset = true;
+        };
+    }
+
+    fn note_state(&mut self, pad_idx: usize, msg: usize) {
+        self.note_state[pad_idx] = msg;
+    }
+
+    fn note_check(&self, pad_idx: usize) -> usize {
+        return self.note_state[pad_idx];
+    }
+
+    fn load_notes(&self, pad_idx: usize) -> midi::Message {
+        let msg = Message::NoteOn(Ch2, self.note[pad_idx], self.vel[pad_idx]);
+        return msg;
+    }
+
+
     fn set_button_light(&mut self, btn: MaschineButton, _color: u32, brightness: f32) {
         let mut idx = 0;
         let mut idx2 = 0;

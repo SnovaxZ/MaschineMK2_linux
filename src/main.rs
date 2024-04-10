@@ -706,11 +706,11 @@ impl<'a> MHandler<'a> {
                     if modpress == 1 {
                         maschine.set_padmode(1);
                     } else {
-                    if status > 0 {
-                        let msg = Message::RPN7(Ch1, 27, status as u8);
-                        self.seq_port.send_message(&msg).unwrap();
-                        self.seq_handle.drain_output();
-                    }
+                        if status > 0 {
+                            let msg = Message::RPN7(Ch1, 27, status as u8);
+                            self.seq_port.send_message(&msg).unwrap();
+                            self.seq_handle.drain_output();
+                        }
                     }
                 }
                 "view" => {
@@ -964,11 +964,23 @@ impl<'a> MaschineHandler for MHandler<'a> {
     fn pad_pressed(&mut self, maschine: &mut dyn Maschine, pad_idx: usize, pressure: f32) {
         let midi_note = maschine.get_midi_note_base() + PAD_NOTE_MAP[pad_idx];
         let msg = Message::NoteOn(Ch1, midi_note, self.pressure_to_vel(pressure));
-
-        self.seq_port.send_message(&msg).unwrap();
-        self.seq_handle.drain_output();
-
-        maschine.set_pad_light(pad_idx, self.pad_color(), pressure.sqrt());
+        if maschine.get_padmode() == 2 {
+            if maschine.get_mod() != 1 {
+                if maschine.note_check(pad_idx) == 0 {
+                    maschine.note_state(pad_idx, 1);
+                    maschine.set_pad_light(pad_idx, self.pad_color(), pressure.sqrt());
+                } else {
+                    maschine.note_state(pad_idx, 0);
+                    maschine.set_pad_light(pad_idx, self.pad_color(), PAD_RELEASED_BRIGHTNESS);
+                };
+            } else {
+                maschine.note_save(pad_idx, midi_note, self.pressure_to_vel(pressure));
+            };
+        } else {
+            self.seq_port.send_message(&msg).unwrap();
+            self.seq_handle.drain_output();
+            maschine.set_pad_light(pad_idx, self.pad_color(), pressure.sqrt());
+        };
     }
 
     fn pad_aftertouch(&mut self, maschine: &mut dyn Maschine, pad_idx: usize, pressure: f32) {
@@ -991,12 +1003,13 @@ impl<'a> MaschineHandler for MHandler<'a> {
     }
 
     fn pad_released(&mut self, maschine: &mut dyn Maschine, pad_idx: usize) {
-        let midi_note = maschine.get_midi_note_base() + PAD_NOTE_MAP[pad_idx];
-        let msg = Message::NoteOff(Ch1, midi_note, 0);
-        self.seq_port.send_message(&msg).unwrap();
-        self.seq_handle.drain_output();
-
-        maschine.set_pad_light(pad_idx, self.pad_color(), PAD_RELEASED_BRIGHTNESS);
+        if maschine.get_padmode() != 2 {
+            let midi_note = maschine.get_midi_note_base() + PAD_NOTE_MAP[pad_idx];
+            let msg = Message::NoteOff(Ch1, midi_note, 0);
+            self.seq_port.send_message(&msg).unwrap();
+            self.seq_handle.drain_output();
+            maschine.set_pad_light(pad_idx, self.pad_color(), PAD_RELEASED_BRIGHTNESS);
+        };
     }
 
     fn encoder_step(&mut self, _: &mut dyn Maschine, _: usize, delta: i32) {
