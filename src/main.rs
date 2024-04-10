@@ -594,6 +594,7 @@ impl<'a> MHandler<'a> {
                         let timer_interval = Duration::from_millis(maschine.get_seq_speed());
                         let mut step = 0;
                         let mut check = 0;
+                        println!("playing notes");
                         for i in 0..4 {
                             while step < 16 {
                                 if maschine.note_check(step) == 1
@@ -604,7 +605,6 @@ impl<'a> MHandler<'a> {
                                     self.seq_port.send_message(&msg).unwrap();
                                     self.seq_handle.drain_output();
                                     check = 1;
-                                    println!("this")
                                 };
                                 if now.elapsed().unwrap() >= timer_interval * 2
                                     && maschine.note_check(step) == 1
@@ -626,6 +626,7 @@ impl<'a> MHandler<'a> {
                             };
                             step = 0;
                         };
+                        println!("done");
                     };
                 }
 

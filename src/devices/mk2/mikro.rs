@@ -466,6 +466,13 @@ impl Maschine for Mikro {
             self.padmode = 0;
         };
         println!("Padmode {}", self.padmode);
+        if self.padmode == 2 {
+            println!("This is Sequencer mode");
+            println!("");
+            println!("Tapping on pads activates them for the sequence.");
+            println!("Tapping on a pad while holding shift, then pressing another pad");
+            println!("will change the note of the pad you pressed first");
+        }
     }
 
     fn get_padmode(&self) -> usize {
@@ -498,7 +505,6 @@ impl Maschine for Mikro {
     fn load_notes(&self, pad_idx: usize, context: usize) -> midi::Message {
         if context == 1 {
             let msg = Message::NoteOn(Ch2, self.note[pad_idx], self.vel[pad_idx]);
-            println!("{}", self.note[pad_idx]);
             return msg;
         } else {
             let msg = Message::NoteOff(Ch2, self.note[pad_idx], self.vel[pad_idx]);
