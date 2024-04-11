@@ -68,3 +68,12 @@ It's a bit inconvenient but:
 - Group buttons change the midi note base.
 - Most other buttons can be mapped in Reaper (I don't know about other DAW's).
 - Encoders are currently absolute 360 degrees, but they stop at 98% (-ish).
+
+# future todos:
+
+- Remove OSC (I still depend on it to turn the lights on)
+- Make the midi statement for buttons better
+- add padmodes for different CC configurations
+- maybe a personal config file?
+- fix encoder jankyness
+- screens?

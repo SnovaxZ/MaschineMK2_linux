@@ -13,10 +13,10 @@
 # How to do things and notes on the project
 
 How to do things:
-- Read at the code.
+- Look at the code.
 - Read the original maschine.rs code.
 - Read the documentation for the crates used.
-- Read the documentation for thae crates used in the crates.
+- Read the documentation for the crates used in the crates.
 - (Optional) Read the rust book.
 - Write code and see what happens.
 
@@ -28,7 +28,9 @@ Notes:
 
 # Release notes
 
-Nothing new, see maschinemk2.rs commits for more info.
+    11.4. Sequencer mode kinda functional
+
+Nothing new, see maschineMK2_linux commits for more info.
 
 
 # Midi and OSC
