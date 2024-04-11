@@ -16,7 +16,7 @@ Without the maschine.rs project I would not have a working MIDI controller right
 
 **ABSOLUTELY TESTING** sequencer mode:
 - press Shift+Padmode twice to activate.
-- Press pads to activate them for the sequence
+- Press pads to activate them for the sequence, they light up when active.
 - Shift+Small roller 1 controls the speed of the sequencer
 - Holding shift and tapping a pad, then tapping another pad changes the note of the first pad.
 - While in sequencer mode, the play button starts the sequencer.
