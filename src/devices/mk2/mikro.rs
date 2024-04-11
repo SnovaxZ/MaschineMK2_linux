@@ -528,7 +528,7 @@ impl Maschine for Mikro {
     }
 
     fn set_seq_speed(&mut self, status: usize) {
-        self.speed = status as u64 * 2;
+        self.speed = status as u64;
         println!("sequencer rate: {}", self.speed);
     }
 
