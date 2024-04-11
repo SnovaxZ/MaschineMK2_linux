@@ -16,9 +16,9 @@
 //  <http://www.gnu.org/licenses/>.
 
 use std::env;
-use std::thread;
 use std::os::unix::io::AsRawFd;
 use std::path::Path;
+use std::thread;
 
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, UdpSocket};
 
@@ -53,8 +53,12 @@ fn ev_loop(dev: &mut dyn Maschine, mhandler: &mut MHandler) {
     ];
 
     let mut now = SystemTime::now();
+    let mut now2 = SystemTime::now();
     let timer_interval = Duration::from_millis(16);
-
+    let mut timer_interval2;
+    let mut step = 0;
+    let mut check = 0;
+    let mut active = false;
     loop {
         poll(&mut fds, 16).unwrap();
 
@@ -69,6 +73,37 @@ fn ev_loop(dev: &mut dyn Maschine, mhandler: &mut MHandler) {
         if now.elapsed().unwrap() >= timer_interval {
             dev.write_lights();
             now = SystemTime::now();
+        }
+        if dev.get_playing() == true {
+            timer_interval2 = Duration::from_millis(dev.get_seq_speed());
+            active = true;
+            if dev.note_check(step) == 1 && now2.elapsed().unwrap() >= timer_interval2 && check == 0
+            {
+                let msg = dev.load_notes(step, 1);
+                mhandler.seq_port.send_message(&msg).unwrap();
+                mhandler.seq_handle.drain_output();
+                check = 1;
+            };
+            if now2.elapsed().unwrap() >= timer_interval2 * 2 && dev.note_check(step) == 1 {
+                let msg = dev.load_notes(step, 0);
+                mhandler.seq_port.send_message(&msg).unwrap();
+                mhandler.seq_handle.drain_output();
+                now2 = SystemTime::now();
+                step += 1;
+                check = 0;
+            } else if now2.elapsed().unwrap() >= timer_interval2 * 2 && dev.note_check(step) == 0 {
+                step += 1;
+                check = 0;
+                now2 = SystemTime::now();
+            };
+            if step >= 16 {
+                step = 0;
+            };
+        } else if active == true {
+            let msg = dev.load_notes(step, 0);
+            mhandler.seq_port.send_message(&msg).unwrap();
+            mhandler.seq_handle.drain_output();
+            active = false;
         }
     }
 }
@@ -590,51 +625,22 @@ impl<'a> MHandler<'a> {
                         self.seq_port.send_message(&msg).unwrap();
                         self.seq_handle.drain_output();
                     } else if maschine.get_padmode() == 2 {
-                        let mut now = SystemTime::now();
-                        let timer_interval = Duration::from_millis(maschine.get_seq_speed());
-                        let mut step = 0;
-                        let mut check = 0;
+                        maschine.set_playing(1);
                         println!("playing notes");
-                        for i in 0..4 {
-                            while step < 16 {
-                                if maschine.note_check(step) == 1
-                                    && now.elapsed().unwrap() >= timer_interval
-                                    && check == 0
-                                {
-                                    let msg = maschine.load_notes(step, 1);
-                                    self.seq_port.send_message(&msg).unwrap();
-                                    self.seq_handle.drain_output();
-                                    check = 1;
-                                };
-                                if now.elapsed().unwrap() >= timer_interval * 2
-                                    && maschine.note_check(step) == 1
-                                {
-                                    let msg = maschine.load_notes(step, 0);
-                                    self.seq_port.send_message(&msg).unwrap();
-                                    self.seq_handle.drain_output();
-                                    now = SystemTime::now();
-                                    step += 1;
-                                    check = 0;
-                                } else if now.elapsed().unwrap() >= timer_interval * 2
-                                    && maschine.note_check(step) == 0
-                                {
-                                    step += 1;
-                                    check = 0;
-                                    now = SystemTime::now();
-                                };
-                                thread::sleep(timer_interval);
-                            };
-                            step = 0;
-                        };
-                        println!("done");
                     };
                 }
 
                 "stop" => {
-                    if status > 0 {
+                    if status > 0 && maschine.get_padmode() != 2 {
                         let msg = Message::RPN7(Ch1, 2, status as u8);
                         self.seq_port.send_message(&msg).unwrap();
                         self.seq_handle.drain_output();
+                    } else {
+                        maschine.set_playing(0);
+                        println!("stop");
+                        //let msg2 = Message::AllNotesOff(Ch2);
+                        //self.seq_port.send_message(&msg2).unwrap();
+                        //self.seq_handle.drain_output();
                     }
                 }
                 "rec" => {

@@ -263,6 +263,9 @@ pub trait Maschine {
     fn set_padmode(&mut self, state: usize);
     fn get_padmode(&self) -> usize;
 
+    fn set_playing(&mut self, state: usize);
+    fn get_playing(&self) -> bool;
+
     fn readable(&mut self, _: &mut dyn MaschineHandler);
 
     fn clear_screen(&mut self);

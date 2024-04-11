@@ -290,6 +290,7 @@ pub struct Mikro {
 
     vel: [U7; 16],
     speed: u64,
+    playing: bool,
 }
 
 impl Mikro {
@@ -339,6 +340,8 @@ impl Mikro {
 
             vel: [80u8; 16],
             speed: 100,
+
+            playing: false,
         };
 
         _self.light_buf[0] = 0x80;
@@ -477,6 +480,18 @@ impl Maschine for Mikro {
 
     fn get_padmode(&self) -> usize {
         return self.padmode;
+    }
+
+    fn set_playing(&mut self, state: usize) {
+        if state == 1 {
+            self.playing = true;
+        } else {
+            self.playing = false;
+        }
+    }
+
+    fn get_playing(&self) -> bool {
+        return self.playing;
     }
 
     fn note_save(&mut self, pad_idx: usize, note: u8, vel: u8) {
