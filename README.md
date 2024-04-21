@@ -1,5 +1,6 @@
 # MaschineMK2_linux
 **MaschineMK2_linux is an open-source program that allows you to (possibly) use your Maschine MK2 device on linux**
+
 Works on atleast ubuntu and fedora, but most distros that ship alsa, jack and QjackCtl or similar should work.
 
 Forked from https://github.com/wrl/maschine.rs
