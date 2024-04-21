@@ -1,6 +1,6 @@
 # MaschineMK2_linux
 **MaschineMK2_linux is an open-source program that allows you to (possibly) use your Maschine MK2 device on linux**
-This is absolutely and completely untested and I have never written rust before this project.
+Works on atleast ubuntu and fedora, but most distros that ship alsa, jack and QjackCtl or similar should work.
 
 Forked from https://github.com/wrl/maschine.rs
 Without the maschine.rs project I would not have a working MIDI controller right now!
@@ -37,9 +37,9 @@ the *build.sh* just runs cargo build and moves the test picture into the release
 *if you can not run the build program you might need to make sure it is executable*
 
 **Other stuff You probably need:**
- - Alsa
- - Jack (alsajack?)
- - Patchance or similar program.
+ - Alsa   *On some distros you may need the alsa-lib-devel package or similar*
+ - Jack
+ - Patchance, Qjackctl or any similar program.
  
 
 # Use
