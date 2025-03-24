@@ -415,6 +415,8 @@ fn btn_to_osc_button_map(btn: MaschineButton) -> &'static str {
         MaschineButton::P6 => "P6",
         MaschineButton::P7 => "P7",
         MaschineButton::P8 => "P8",
+
+        _=> "NO",
     }
 }
 
@@ -541,6 +543,7 @@ impl<'a> MHandler<'a> {
         }
     }
 
+//Status is Byte from previous stupid naming!
     fn send_osc_button_msg(
         &mut self,
         maschine: &mut dyn Maschine,
@@ -551,6 +554,7 @@ impl<'a> MHandler<'a> {
         let button = btn_to_osc_button_map(btn);
         let controlbase = 15;
         let modpress = maschine.get_mod();
+        //println!("{} is:  {}", button, status);
         if button.contains("shift") {
             if status > 0 {
                 maschine.set_mod(1);
@@ -560,6 +564,7 @@ impl<'a> MHandler<'a> {
         }
         if button.contains("C") {
             let idx = 1;
+            //println!("C: {}", status);
             if button == "C8" {
                 maschine.set_roller_state(status, idx);
                 //println!("3={}", status);
@@ -1003,8 +1008,15 @@ impl<'a> MHandler<'a> {
         self.send_osc_msg(&*format!("/{}", button), osc_args![status as f32]);
     }
 
-    fn send_osc_encoder_msg(&self, delta: i32) {
-        self.send_osc_msg("/maschine/encoder", osc_args![delta]);
+    fn send_osc_encoder_msg(&self, maschine: &mut dyn Maschine, idx: usize,  status: i32) {
+        let state = maschine.get_roller_state(idx);
+        let status = status / 4 + state as i32 * 64 ;
+        if status - maschine.get_roller_status(idx) < 10 && maschine.get_roller_status(idx) - status < 10{
+            let msg = Message::RPN14(Ch1, idx as u16 + 16, status as u16);
+            maschine.set_roller_status(status, idx);
+            self.seq_port.send_message(&msg).unwrap();
+            self.seq_handle.drain_output();
+        }
     }
 }
 
@@ -1062,8 +1074,8 @@ impl<'a> MaschineHandler for MHandler<'a> {
         };
     }
 
-    fn encoder_step(&mut self, _: &mut dyn Maschine, _: usize, delta: i32) {
-        self.send_osc_encoder_msg(delta);
+    fn encoder_step(&mut self, maschine: &mut dyn Maschine, idx: usize, state: i32) {
+        self.send_osc_encoder_msg(maschine, idx, state);
     }
 
     fn button_down(
@@ -1073,7 +1085,7 @@ impl<'a> MaschineHandler for MHandler<'a> {
         byte: u8,
         is_down: bool,
     ) {
-        //println!("{}", byte as usize);
+        //println!("{}", byte);
         self.send_osc_button_msg(maschine, btn, byte as usize, is_down);
     }
 

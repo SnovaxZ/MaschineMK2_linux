@@ -30,7 +30,7 @@ use base::{Maschine, MaschineButton, MaschineHandler, MaschinePad, MaschinePadSt
 
 use crate::base::maschine;
 
-const BUTTON_REPORT_TO_MIKROBUTTONS_MAP: [[Option<MaschineButton>; 8]; 23] = [
+const BUTTON_REPORT_TO_MIKROBUTTONS_MAP: [[Option<MaschineButton>; 8]; 24] = [
     [
         Some(MaschineButton::F8),
         Some(MaschineButton::F7),
@@ -261,6 +261,16 @@ const BUTTON_REPORT_TO_MIKROBUTTONS_MAP: [[Option<MaschineButton>; 8]; 23] = [
         Some(MaschineButton::P7),
         Some(MaschineButton::P8),
     ],
+    [
+        Some(MaschineButton::Q1),
+        Some(MaschineButton::Q2),
+        Some(MaschineButton::Q3),
+        Some(MaschineButton::Q4),
+        Some(MaschineButton::Q5),
+        Some(MaschineButton::Q6),
+        Some(MaschineButton::Q7),
+        Some(MaschineButton::Q8),
+    ],
 ];
 
 #[allow(dead_code)]
@@ -276,10 +286,11 @@ pub struct Mikro {
     light_buf3: [u8; 57],
 
     pads: [MaschinePad; 16],
-    buttons: [u8; 24],
+    buttons: [u8; 27],
 
     midi_note_base: u8,
     roller_state: [usize; 9],
+    roller_status: [i32; 9],
     mod_state: usize,
     padmode: usize,
 
@@ -325,11 +336,12 @@ impl Mikro {
             pads: Mikro::sixteen_maschine_pads(),
             buttons: [
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
-                0x10, 0x10, 0x10,
+                0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
             ],
 
             midi_note_base: 48,
             roller_state: [0usize; 9],
+            roller_status: [0i32; 9],
             mod_state: 0,
             padmode: 0,
 
@@ -351,25 +363,32 @@ impl Mikro {
     }
 
     fn read_buttons(&mut self, handler: &mut dyn MaschineHandler, buf: &[u8]) {
-        for (idx, &byte) in buf[0..23].iter().enumerate() {
+        for (idx, &byte) in buf[0..24].iter().enumerate() {
             let mut diff = (byte ^ self.buttons[idx]) as u32;
-
+            //println!("IDX: {}, Value{}", idx, byte);
             let mut off = 0usize;
             while diff != 0 {
                 off += (diff.trailing_zeros() + 1) as usize;
                 let btn = BUTTON_REPORT_TO_MIKROBUTTONS_MAP[idx][8 - off]
                     .expect("unknown button received from device");
-
-                if (byte & (1 << (off - 1))) != 0 {
-                    //println!(" {} ", byte);
-                    let is_down = true;
-                    handler.button_down(self, btn, byte, is_down);
+                if idx <= 7 {
+                    if (byte & (1 << (off - 1))) != 0 {
+                        //println!(" {} ", byte);
+                        let is_down = true;
+                        handler.button_down(self, btn, byte, is_down);
+                    } else {
+                        let is_down = false;
+                        //print!(" {} ", byte);
+                        handler.button_up(self, btn, byte, is_down);
+                    };
                 } else {
-                    let is_down = false;
-                    //print!(" {} ", byte);
-                    handler.button_up(self, btn, byte, is_down);
-                }
-                diff >>= off;
+                        if idx % 2 == 0  {
+                            handler.encoder_step(self, (idx - 7) / 2 ,byte as i32 );
+                        } else {
+                            self.set_roller_state(byte as usize, (idx - 8) / 2 as usize);
+                        };
+                };
+                                diff >>= off;
             }
 
             self.buttons[idx] = byte;
@@ -381,13 +400,6 @@ impl Mikro {
         } else if self.buttons[23] == buf[23] {
             return;
         }
-
-        if ((self.buttons[23] + 1) & 0xF) == buf[23] {
-            handler.encoder_step(self, 0, 1);
-        } else {
-            handler.encoder_step(self, 0, -1);
-        }
-
         self.buttons[23] = buf[23];
     }
 
@@ -449,11 +461,16 @@ impl Maschine for Mikro {
     }
 
     fn get_roller_state(&self, idx: usize) -> usize {
-        //println!("{}", self.roller_state[idx]);
-
         return self.roller_state[idx];
     }
 
+    fn set_roller_status(&mut self, status: i32, idx: usize) {
+        self.roller_status[idx] = status;
+    }
+
+    fn get_roller_status(&self, idx:usize) -> i32 {
+        return self.roller_status[idx]
+    }
     fn set_mod(&mut self, state: usize) {
         self.mod_state = state;
     }
@@ -604,7 +621,7 @@ impl Maschine for Mikro {
     }
 
     fn readable(&mut self, handler: &mut dyn MaschineHandler) {
-        let mut buf = [0u8; 256];
+        let mut buf = [0u8; 512];
 
         let nbytes = match unistd::read(self.dev, &mut buf) {
             Err(err) => panic!("read failed: {}", err.to_string()),

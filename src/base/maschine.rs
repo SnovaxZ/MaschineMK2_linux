@@ -232,7 +232,14 @@ pub enum MaschineButton {
     P7,
     P8,
 
-
+    Q1,
+    Q2,
+    Q3,
+    Q4,
+    Q5,
+    Q6,
+    Q7,
+    Q8,
 }
 pub trait Maschine {
     fn get_fd(&self) -> RawFd;
@@ -244,6 +251,9 @@ pub trait Maschine {
 
     fn set_roller_state(&mut self, state: usize, idx: usize);
     fn get_roller_state(&self, idx: usize) -> usize;
+
+    fn set_roller_status(&mut self, status: i32, idx: usize);
+    fn get_roller_status(&self, idx: usize) -> i32;
 
     fn set_pad_light(&mut self, pad_idx: usize, color: u32, brightness: f32);
     fn set_button_light(&mut self, btn: MaschineButton, color: u32, brightness: f32);
