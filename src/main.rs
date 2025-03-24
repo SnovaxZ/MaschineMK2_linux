@@ -18,7 +18,6 @@
 use std::env;
 use std::os::unix::io::AsRawFd;
 use std::path::Path;
-use std::thread;
 
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, UdpSocket};
 
@@ -1011,7 +1010,7 @@ impl<'a> MHandler<'a> {
     fn send_osc_encoder_msg(&self, maschine: &mut dyn Maschine, idx: usize,  status: i32) {
         let state = maschine.get_roller_state(idx);
         let status = status / 4 + state as i32 * 64 ;
-        if status - maschine.get_roller_status(idx) < 10 && maschine.get_roller_status(idx) - status < 10{
+        if status - maschine.get_roller_status(idx) < 40 && maschine.get_roller_status(idx) - status < 40{
             let msg = Message::RPN14(Ch1, idx as u16 + 16, status as u16);
             maschine.set_roller_status(status, idx);
             self.seq_port.send_message(&msg).unwrap();
