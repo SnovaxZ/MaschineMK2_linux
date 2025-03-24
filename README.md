@@ -18,7 +18,7 @@ Without the maschine.rs project I would not have a working MIDI controller right
 **ABSOLUTELY TESTING** sequencer mode:
 - press Shift+Padmode twice to activate.
 - Press pads to activate them for the sequence, they light up when active.
-- Shift+Small roller 1 controls the speed of the sequencer
+- ~~- Shift+Small roller 1 controls the speed of the sequencer~~ **Under construction**
 - Holding shift and tapping a pad, then tapping another pad changes the note of the first pad.
 - While in sequencer mode, the play button starts the sequencer.
 
@@ -38,6 +38,7 @@ the *build.sh* just runs cargo build and moves the test picture into the release
 *if you can not run the build program you might need to make sure it is executable*
 
 **Other stuff You probably need:**
+Pipewire also works
  - Alsa   *On some distros you may need the alsa-lib-devel package or similar*
  - Jack
  - Patchance, Qjackctl or any similar program.
