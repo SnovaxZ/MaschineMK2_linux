@@ -38,6 +38,7 @@ the *build.sh* just runs cargo build and moves the test picture into the release
 *if you can not run the build program you might need to make sure it is executable*
 
 **Other stuff You probably need:**
+Pipewire also works
  - Alsa   *On some distros you may need the alsa-lib-devel package or similar*
  - Jack
  - Patchance, Qjackctl or any similar program.
